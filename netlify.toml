@@ -110,6 +110,13 @@ function = "i18n"
 path = "/"
 function = "ab"
 
+# Deploy Previews com senha (para review externo)
+[context.deploy-preview]
+  command = "npm run ci && npm run build"
+
+[context.branch-deploy]
+  command = "npm run ci && npm run build"
+
 # SPA fallback inteligente
 [[redirects]]
 from = "/*"

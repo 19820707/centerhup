@@ -20,8 +20,32 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "CenterHub",
+    "description": "Marketplace local para apoiar o comércio do seu bairro",
+    "url": "https://centerhub.netlify.app",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://centerhub.netlify.app/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "CenterHub",
+      "url": "https://centerhub.netlify.app"
+    }
+  };
+
   return (
     <html lang="pt-PT">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body>{children}</body>
     </html>
   );

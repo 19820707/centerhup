@@ -12,6 +12,8 @@
     "typecheck": "tsc --noEmit",
     "ci": "npm run lint && npm run typecheck",
     "analyze": "ANALYZE=true next build",
+    "lighthouse": "lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html",
+    "lighthouse:ci": "lighthouse http://localhost:3000 --output=json --output-path=./lighthouse-report.json --chrome-flags='--headless'",
     "vercel-build": "npm run build",
     "postbuild": "echo 'Build completed successfully'"
   },
@@ -30,6 +32,7 @@
     "autoprefixer": "10.4.19",
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.5",
+    "lighthouse": "^11.7.0",
     "postcss": "8.4.39",
     "stylelint": "^16.25.0",
     "stylelint-config-standard": "^39.0.1",
