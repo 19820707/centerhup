@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "ci": "next lint && tsc --noEmit && node scripts/check-bundle.js",
+    "typecheck": "tsc --noEmit",
     "kpis": "node scripts/monitor-kpis.js",
     "vitals": "node scripts/web-vitals-monitor.js",
     "optimize": "node scripts/performance-optimizer.js",

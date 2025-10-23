@@ -1,3 +1,4 @@
+# Netlify configuration - Updated to fix ESLint issues
 [build]
   command = "npm run build"
   publish = "out"
