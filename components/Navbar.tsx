@@ -1,4 +1,4 @@
-import { LanguageSelector } from "./LanguageSelector";
+import { ProfessionalSelector } from "./ProfessionalSelector";
 
 export function Navbar() {
   return (
@@ -15,7 +15,7 @@ export function Navbar() {
           <a href="#features" className="hover:text-brand-700">Como funciona</a>
         </nav>
         <div className="flex items-center gap-3">
-          <LanguageSelector />
+          <ProfessionalSelector />
           <a href="#cta" className="btn-ghost text-sm">Entrar</a>
           <a href="#cta" className="btn-primary text-sm">Começar grátis</a>
         </div>
