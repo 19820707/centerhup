@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Centerhup - Landing Page
 
-## Getting Started
+Landing page moderna e responsiva construída com Next.js 14, TypeScript e Tailwind CSS.
 
-First, run the development server:
+## 🚀 Como executar
 
+### Desenvolvimento local
 ```bash
+# Instalar dependências
+npm install
+
+# Executar em modo desenvolvimento
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Abrir http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Build para produção
+```bash
+npm run build
+npm start
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Estrutura do projeto
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+centerhup/
+├─ app/
+│  ├─ favicon.ico
+│  ├─ globals.css
+│  ├─ layout.tsx
+│  └─ page.tsx
+├─ components/
+│  ├─ Navbar.tsx
+│  ├─ Hero.tsx
+│  ├─ Features.tsx
+│  ├─ CTA.tsx
+│  └─ Footer.tsx
+├─ public/
+│  └─ logo.svg
+├─ next.config.js
+├─ package.json
+├─ postcss.config.mjs
+├─ tailwind.config.ts
+└─ tsconfig.json
+```
 
-## Learn More
+## 🎨 Características
 
-To learn more about Next.js, take a look at the following resources:
+- **Design responsivo** com Tailwind CSS
+- **Componentes modulares** em TypeScript
+- **Formulário funcional** com estados de loading/erro
+- **SEO otimizado** com metadados OpenGraph
+- **Performance otimizada** com Next.js 14
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🌐 Deploy
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Vercel (recomendado)
+1. Conecte seu repositório no painel da Vercel
+2. Adicione os domínios em Settings → Domains
+3. Configure o DNS na Hostinger:
+   - Apex: A → 76.76.21.21
+   - www: CNAME → cname.vercel-dns.com
 
-## Deploy on Vercel
+## 📝 Próximos passos
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] Integrar formulário com serviço de email (Resend/Mailchimp)
+- [ ] Adicionar seção de preços
+- [ ] Criar blog para SEO
+- [ ] Implementar páginas de Termos e Privacidade
