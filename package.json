@@ -7,7 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "vercel-build": "npm run build",
+    "postbuild": "echo 'Build completed successfully'"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
