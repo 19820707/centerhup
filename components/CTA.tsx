@@ -22,8 +22,8 @@ export function CTA() {
       <div className="container-max py-16 sm:py-24">
         <div className="card">
           <div className="max-w-2xl">
-            <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight">Pronto para centralizar tudo?</h3>
-            <p className="mt-2 text-gray-600">Entre para o beta e receba acesso antecipado.</p>
+            <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight">Pronto para apoiar o comércio local?</h3>
+            <p className="mt-2 text-gray-600">Junte-se à comunidade CenterHub e descubra as melhores lojas do seu bairro.</p>
           </div>
           <form onSubmit={onSubmit} className="mt-6 flex flex-col sm:flex-row gap-3">
             <input
@@ -34,7 +34,7 @@ export function CTA() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <button className="btn-primary" type="submit">Quero acessar</button>
+            <button className="btn-primary" type="submit">Quero começar</button>
           </form>
           {status === "ok" && (
             <p className="mt-3 text-sm text-green-700">Obrigado! Enviaremos novidades em breve.</p>

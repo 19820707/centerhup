@@ -3,15 +3,19 @@ export function Navbar() {
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-gray-200">
       <div className="container-max h-16 flex items-center justify-between">
         <a href="#" className="flex items-center gap-2 font-semibold">
-          <img src="/logo.svg" alt="Centerhup" className="h-6 w-6" />
-          Centerhup
+          <img src="/logo.svg" alt="CenterHub" className="h-6 w-6" />
+          CenterHub
         </a>
         <nav className="hidden sm:flex items-center gap-6 text-sm">
-          <a href="#features" className="hover:text-brand-700">Recursos</a>
-          <a href="#precos" className="hover:text-brand-700">Preços</a>
-          <a href="#faq" className="hover:text-brand-700">FAQ</a>
+          <a href="#" className="hover:text-brand-700">Início</a>
+          <a href="#categorias" className="hover:text-brand-700">Categorias</a>
+          <a href="#lojas" className="hover:text-brand-700">Lojas</a>
+          <a href="#features" className="hover:text-brand-700">Como funciona</a>
         </nav>
         <div className="flex items-center gap-3">
+          <select className="text-sm border-none bg-transparent text-gray-600">
+            <option>Português</option>
+          </select>
           <a href="#cta" className="btn-ghost text-sm">Entrar</a>
           <a href="#cta" className="btn-primary text-sm">Começar grátis</a>
         </div>
