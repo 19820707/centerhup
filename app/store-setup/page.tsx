@@ -169,7 +169,7 @@ export default function StoreSetupPage() {
     }
   }, [watchedName, watchedSlug, setValue]);
 
-  // Verificar disponibilidade do slug (debounced)
+  // Verificar disponibilidade do slug (simulado)
   useEffect(() => {
     if (slugCheckTimeout) {
       clearTimeout(slugCheckTimeout);
@@ -178,21 +178,16 @@ export default function StoreSetupPage() {
     if (watchedSlug && watchedSlug.length >= 2) {
       setSlugStatus("checking");
       
-      const timeout = setTimeout(async () => {
-        try {
-          // Simular verificação de disponibilidade
-          const response = await fetch(`/api/stores/check-slug?slug=${watchedSlug}`);
-          const data = await response.json();
-          
-          if (data.available) {
-            setSlugStatus("available");
-          } else {
-            setSlugStatus("unavailable");
-            setError("slug", { message: "Este slug já está em uso" });
-          }
-        } catch (error) {
-          console.error("Erro ao verificar slug:", error);
-          setSlugStatus("idle");
+      const timeout = setTimeout(() => {
+        // Simular verificação de disponibilidade (sem API)
+        const usedSlugs = ['padaria-do-joao', 'mercearia-central', 'hortifruti-maria'];
+        const isAvailable = !usedSlugs.includes(watchedSlug.toLowerCase());
+        
+        if (isAvailable) {
+          setSlugStatus("available");
+        } else {
+          setSlugStatus("unavailable");
+          setError("slug", { message: "Este slug já está em uso" });
         }
       }, 500);
 
@@ -225,31 +220,24 @@ export default function StoreSetupPage() {
     setIsSubmitting(true);
     
     try {
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("slug", data.slug);
-      formData.append("theme", data.theme);
-      formData.append("primaryColor", data.primaryColor);
+      // Simular criação da loja (sem API)
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      if (data.slogan) formData.append("slogan", data.slogan);
-      if (data.description) formData.append("description", data.description);
-      if (data.logo) formData.append("logo", data.logo);
-      if (data.favicon) formData.append("favicon", data.favicon);
-
-      const response = await fetch("/api/stores", {
-        method: "POST",
-        body: formData
+      const storeId = `store_${Date.now()}`;
+      console.log("Loja criada:", {
+        id: storeId,
+        name: data.name,
+        slug: data.slug,
+        theme: data.theme,
+        primaryColor: data.primaryColor
       });
-
-      if (response.ok) {
-        const result = await response.json();
-        router.push(`/dashboard?store=${result.storeId}`);
-      } else {
-        const error = await response.json();
-        console.error("Erro ao criar loja:", error);
-      }
+      
+      // Simular redirecionamento
+      alert(`Loja "${data.name}" criada com sucesso! ID: ${storeId}`);
+      
     } catch (error) {
       console.error("Erro ao criar loja:", error);
+      alert("Erro ao criar loja. Tente novamente.");
     } finally {
       setIsSubmitting(false);
     }
