@@ -368,7 +368,7 @@ export function ProfessionalSelector() {
     console.log("Idioma alterado para:", language.name, language.code);
     
     // Simular tradução (em um projeto real, você faria uma chamada API)
-    alert(`Idioma alterado para ${language.name} (${language.code})`);
+    // alert(`Idioma alterado para ${language.name} (${language.code})`);
   };
 
   const handleCurrencyChange = (currency: typeof currencies[0]) => {
@@ -376,7 +376,7 @@ export function ProfessionalSelector() {
     localStorage.setItem('selectedCurrency', JSON.stringify(currency));
     
     console.log("Moeda alterada para:", currency.name, currency.symbol);
-    alert(`Moeda alterada para ${currency.symbol} ${currency.code} - ${currency.name}`);
+    // alert(`Moeda alterada para ${currency.symbol} ${currency.code} - ${currency.name}`);
   };
 
   const handleRegionChange = (region: typeof regions[0]) => {
@@ -389,7 +389,96 @@ export function ProfessionalSelector() {
     localStorage.setItem('selectedCurrency', JSON.stringify(matchingCurrency));
     
     console.log("País/Região alterado para:", region.name, region.code);
-    alert(`País/Região alterado para ${region.name} (${region.code})`);
+    
+    // Simular mudança de domínio como Amazon
+    const domainMap: { [key: string]: string } = {
+      'PT': 'centerhup.pt',
+      'BR': 'centerhup.com.br', 
+      'US': 'centerhup.com',
+      'GB': 'centerhup.co.uk',
+      'ES': 'centerhup.es',
+      'FR': 'centerhup.fr',
+      'DE': 'centerhup.de',
+      'IT': 'centerhup.it',
+      'NL': 'centerhup.nl',
+      'BE': 'centerhup.be',
+      'CA': 'centerhup.ca',
+      'AU': 'centerhup.com.au',
+      'JP': 'centerhup.co.jp',
+      'CN': 'centerhup.cn',
+      'IN': 'centerhup.in',
+      'MX': 'centerhup.com.mx',
+      'AR': 'centerhup.com.ar',
+      'CL': 'centerhup.cl',
+      'CO': 'centerhup.com.co',
+      'PE': 'centerhup.com.pe',
+      'SG': 'centerhup.com.sg',
+      'MY': 'centerhup.com.my',
+      'TH': 'centerhup.co.th',
+      'ID': 'centerhup.co.id',
+      'PH': 'centerhup.com.ph',
+      'VN': 'centerhup.vn',
+      'KR': 'centerhup.co.kr',
+      'SA': 'centerhup.com.sa',
+      'AE': 'centerhup.ae',
+      'EG': 'centerhup.com.eg',
+      'ZA': 'centerhup.co.za',
+      'NG': 'centerhup.com.ng',
+      'KE': 'centerhup.co.ke',
+      'GH': 'centerhup.com.gh',
+      'MA': 'centerhup.ma',
+      'TN': 'centerhup.tn',
+      'DZ': 'centerhup.dz',
+      'TR': 'centerhup.com.tr',
+      'RU': 'centerhup.ru',
+      'PL': 'centerhup.pl',
+      'CZ': 'centerhup.cz',
+      'HU': 'centerhup.hu',
+      'RO': 'centerhup.ro',
+      'BG': 'centerhup.bg',
+      'HR': 'centerhup.hr',
+      'RS': 'centerhup.rs',
+      'SI': 'centerhup.si',
+      'SK': 'centerhup.sk',
+      'LT': 'centerhup.lt',
+      'LV': 'centerhup.lv',
+      'EE': 'centerhup.ee',
+      'FI': 'centerhup.fi',
+      'SE': 'centerhup.se',
+      'NO': 'centerhup.no',
+      'DK': 'centerhup.dk',
+      'IS': 'centerhup.is',
+      'CH': 'centerhup.ch',
+      'AT': 'centerhup.at',
+      'IE': 'centerhup.ie',
+      'LU': 'centerhup.lu',
+      'MT': 'centerhup.mt',
+      'CY': 'centerhup.com.cy',
+      'NZ': 'centerhup.co.nz',
+      'FJ': 'centerhup.com.fj',
+      'PG': 'centerhup.com.pg',
+      'SB': 'centerhup.com.sb',
+      'VU': 'centerhup.vu',
+      'WS': 'centerhup.ws',
+      'TO': 'centerhup.to',
+      'KI': 'centerhup.ki',
+      'TV': 'centerhup.tv',
+      'NR': 'centerhup.nr',
+      'PW': 'centerhup.pw',
+      'FM': 'centerhup.fm',
+      'MH': 'centerhup.mh'
+    };
+    
+    const newDomain = domainMap[region.code] || 'centerhup.com';
+    
+    // Simular redirecionamento para o domínio correto
+    console.log(`Redirecionando para: https://${newDomain}`);
+    
+    // Em um projeto real, você faria:
+    // window.location.href = `https://${newDomain}`;
+    
+    // Para demonstração, vamos mostrar um alert
+    alert(`Você será redirecionado para: https://${newDomain}\n\nPaís/Região: ${region.name} (${region.code})\nMoeda: ${matchingCurrency?.symbol} ${matchingCurrency?.code}`);
   };
 
   return (
@@ -417,7 +506,88 @@ export function ProfessionalSelector() {
         <div className="absolute top-full right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
           <div className="p-4 border-b border-gray-200">
             <h3 className="font-semibold text-gray-900">Change language</h3>
-            <p className="text-sm text-gray-600">You are shopping on CenterHub.{selectedRegion.code.toLowerCase()}</p>
+            <p className="text-sm text-gray-600">
+              You are shopping on {(() => {
+                const domainMap: { [key: string]: string } = {
+                  'PT': 'CenterHub.pt',
+                  'BR': 'CenterHub.com.br', 
+                  'US': 'CenterHub.com',
+                  'GB': 'CenterHub.co.uk',
+                  'ES': 'CenterHub.es',
+                  'FR': 'CenterHub.fr',
+                  'DE': 'CenterHub.de',
+                  'IT': 'CenterHub.it',
+                  'NL': 'CenterHub.nl',
+                  'BE': 'CenterHub.be',
+                  'CA': 'CenterHub.ca',
+                  'AU': 'CenterHub.com.au',
+                  'JP': 'CenterHub.co.jp',
+                  'CN': 'CenterHub.cn',
+                  'IN': 'CenterHub.in',
+                  'MX': 'CenterHub.com.mx',
+                  'AR': 'CenterHub.com.ar',
+                  'CL': 'CenterHub.cl',
+                  'CO': 'CenterHub.com.co',
+                  'PE': 'CenterHub.com.pe',
+                  'SG': 'CenterHub.com.sg',
+                  'MY': 'CenterHub.com.my',
+                  'TH': 'CenterHub.co.th',
+                  'ID': 'CenterHub.co.id',
+                  'PH': 'CenterHub.com.ph',
+                  'VN': 'CenterHub.vn',
+                  'KR': 'CenterHub.co.kr',
+                  'SA': 'CenterHub.com.sa',
+                  'AE': 'CenterHub.ae',
+                  'EG': 'CenterHub.com.eg',
+                  'ZA': 'CenterHub.co.za',
+                  'NG': 'CenterHub.com.ng',
+                  'KE': 'CenterHub.co.ke',
+                  'GH': 'CenterHub.com.gh',
+                  'MA': 'CenterHub.ma',
+                  'TN': 'CenterHub.tn',
+                  'DZ': 'CenterHub.dz',
+                  'TR': 'CenterHub.com.tr',
+                  'RU': 'CenterHub.ru',
+                  'PL': 'CenterHub.pl',
+                  'CZ': 'CenterHub.cz',
+                  'HU': 'CenterHub.hu',
+                  'RO': 'CenterHub.ro',
+                  'BG': 'CenterHub.bg',
+                  'HR': 'CenterHub.hr',
+                  'RS': 'CenterHub.rs',
+                  'SI': 'CenterHub.si',
+                  'SK': 'CenterHub.sk',
+                  'LT': 'CenterHub.lt',
+                  'LV': 'CenterHub.lv',
+                  'EE': 'CenterHub.ee',
+                  'FI': 'CenterHub.fi',
+                  'SE': 'CenterHub.se',
+                  'NO': 'CenterHub.no',
+                  'DK': 'CenterHub.dk',
+                  'IS': 'CenterHub.is',
+                  'CH': 'CenterHub.ch',
+                  'AT': 'CenterHub.at',
+                  'IE': 'CenterHub.ie',
+                  'LU': 'CenterHub.lu',
+                  'MT': 'CenterHub.mt',
+                  'CY': 'CenterHub.com.cy',
+                  'NZ': 'CenterHub.co.nz',
+                  'FJ': 'CenterHub.com.fj',
+                  'PG': 'CenterHub.com.pg',
+                  'SB': 'CenterHub.com.sb',
+                  'VU': 'CenterHub.vu',
+                  'WS': 'CenterHub.ws',
+                  'TO': 'CenterHub.to',
+                  'KI': 'CenterHub.ki',
+                  'TV': 'CenterHub.tv',
+                  'NR': 'CenterHub.nr',
+                  'PW': 'CenterHub.pw',
+                  'FM': 'CenterHub.fm',
+                  'MH': 'CenterHub.mh'
+                };
+                return domainMap[selectedRegion.code] || 'CenterHub.com';
+              })()}
+            </p>
           </div>
 
           <div className="flex border-b border-gray-200">
