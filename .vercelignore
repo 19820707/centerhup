@@ -1,4 +1,4 @@
-# Vercel ignore file
+# Force Vercel to rebuild everything
 .next/
 node_modules/
 *.log
@@ -6,3 +6,5 @@ node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
+.vercel/
+.cache/
