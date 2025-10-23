@@ -122,3 +122,9 @@ upgrade-insecure-requests;
 from = "/*"
 to = "/index.html"
 status = 200
+
+# Headers para assets estáticos
+[[headers]]
+for = "/_next/static/*"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
