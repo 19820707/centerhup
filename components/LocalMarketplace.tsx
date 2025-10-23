@@ -218,7 +218,7 @@ export function LocalMarketplace() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <section className="bg-gray-50 py-16">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="container-max px-4 py-4">
@@ -426,6 +426,6 @@ export function LocalMarketplace() {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }
