@@ -2,6 +2,7 @@
   "name": "centerhup",
   "version": "0.1.0",
   "private": true,
+  "description": "CenterHub - Marketplace Local Inteligente",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
