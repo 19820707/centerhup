@@ -320,12 +320,20 @@ export function ProfessionalSelector() {
   const [selectedRegion, setSelectedRegion] = useState(regions[0]);
   const [activeTab, setActiveTab] = useState<"language" | "currency" | "region">("language");
   const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [recentSelections, setRecentSelections] = useState<Array<{
+    type: 'language' | 'currency' | 'region';
+    item: any;
+    timestamp: number;
+  }>>([]);
 
   // Carregar preferências salvas ao inicializar
   useEffect(() => {
     const savedRegion = localStorage.getItem('selectedRegion');
     const savedCurrency = localStorage.getItem('selectedCurrency');
     const savedLanguage = localStorage.getItem('selectedLanguage');
+    const savedRecentSelections = localStorage.getItem('recentSelections');
 
     if (savedRegion) {
       try {
@@ -354,9 +362,72 @@ export function ProfessionalSelector() {
         console.error('Erro ao carregar idioma salvo:', e);
       }
     }
+
+    if (savedRecentSelections) {
+      try {
+        const recent = JSON.parse(savedRecentSelections);
+        setRecentSelections(recent);
+      } catch (e) {
+        console.error('Erro ao carregar seleções recentes:', e);
+      }
+    }
+
+    // Detectar localização do usuário
+    detectUserLocation();
   }, []);
 
-  const handleLanguageChange = (language: typeof languages[0]) => {
+  // Detectar localização do usuário
+  const detectUserLocation = () => {
+    if (navigator.language) {
+      const userLang = navigator.language;
+      const matchingLanguage = languages.find(lang => 
+        lang.code === userLang || lang.code.startsWith(userLang.split('-')[0])
+      );
+      
+      if (matchingLanguage) {
+        const matchingRegion = regions.find(r => r.code === matchingLanguage.code.split('-')[1]);
+        if (matchingRegion) {
+          setSelectedLanguage(matchingLanguage);
+          setSelectedRegion(matchingRegion);
+          const matchingCurrency = currencies.find(c => c.code === matchingRegion.currency);
+          if (matchingCurrency) setSelectedCurrency(matchingCurrency);
+        }
+      }
+    }
+  };
+
+  // Funções de filtro
+  const filteredLanguages = languages.filter(lang =>
+    lang.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    lang.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    lang.code.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredCurrencies = currencies.filter(currency =>
+    currency.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    currency.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    currency.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredRegions = regions.filter(region =>
+    region.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    region.code.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Adicionar ao histórico
+  const addToRecentSelections = (type: 'language' | 'currency' | 'region', item: any) => {
+    const newSelection = { type, item, timestamp: Date.now() };
+    const updated = [newSelection, ...recentSelections.filter(s => 
+      !(s.type === type && s.item.code === item.code)
+    )].slice(0, 5); // Manter apenas 5 seleções recentes
+    
+    setRecentSelections(updated);
+    localStorage.setItem('recentSelections', JSON.stringify(updated));
+  };
+
+  const handleLanguageChange = async (language: typeof languages[0]) => {
+    setIsLoading(true);
+    
     setSelectedLanguage(language);
     const matchingRegion = regions.find(r => r.code === language.code.split('-')[1]);
     if (matchingRegion) setSelectedRegion(matchingRegion);
@@ -365,21 +436,39 @@ export function ProfessionalSelector() {
     document.documentElement.lang = language.code;
     localStorage.setItem('selectedLanguage', JSON.stringify(language));
     
+    // Adicionar ao histórico
+    addToRecentSelections('language', language);
+    
     console.log("Idioma alterado para:", language.name, language.code);
     
-    // Simular tradução (em um projeto real, você faria uma chamada API)
-    // alert(`Idioma alterado para ${language.name} (${language.code})`);
+    // Simular delay de carregamento
+    await new Promise(resolve => setTimeout(resolve, 500));
+    setIsLoading(false);
+    setIsOpen(false);
+    setSearchTerm("");
   };
 
-  const handleCurrencyChange = (currency: typeof currencies[0]) => {
+  const handleCurrencyChange = async (currency: typeof currencies[0]) => {
+    setIsLoading(true);
+    
     setSelectedCurrency(currency);
     localStorage.setItem('selectedCurrency', JSON.stringify(currency));
     
+    // Adicionar ao histórico
+    addToRecentSelections('currency', currency);
+    
     console.log("Moeda alterada para:", currency.name, currency.symbol);
-    // alert(`Moeda alterada para ${currency.symbol} ${currency.code} - ${currency.name}`);
+    
+    // Simular delay de carregamento
+    await new Promise(resolve => setTimeout(resolve, 300));
+    setIsLoading(false);
+    setIsOpen(false);
+    setSearchTerm("");
   };
 
-  const handleRegionChange = (region: typeof regions[0]) => {
+  const handleRegionChange = async (region: typeof regions[0]) => {
+    setIsLoading(true);
+    
     setSelectedRegion(region);
     const matchingCurrency = currencies.find(c => c.code === region.currency);
     if (matchingCurrency) setSelectedCurrency(matchingCurrency);
@@ -387,6 +476,9 @@ export function ProfessionalSelector() {
     // Salvar preferências
     localStorage.setItem('selectedRegion', JSON.stringify(region));
     localStorage.setItem('selectedCurrency', JSON.stringify(matchingCurrency));
+    
+    // Adicionar ao histórico
+    addToRecentSelections('region', region);
     
     console.log("País/Região alterado para:", region.name, region.code);
     
@@ -471,6 +563,9 @@ export function ProfessionalSelector() {
     
     const newDomain = domainMap[region.code] || 'centerhup.com';
     
+    // Simular delay de carregamento
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
     // Simular redirecionamento para o domínio correto
     console.log(`Redirecionando para: https://${newDomain}`);
     
@@ -479,21 +574,60 @@ export function ProfessionalSelector() {
     
     // Para demonstração, vamos mostrar um alert
     alert(`Você será redirecionado para: https://${newDomain}\n\nPaís/Região: ${region.name} (${region.code})\nMoeda: ${matchingCurrency?.symbol} ${matchingCurrency?.code}`);
+    
+    setIsLoading(false);
+    setIsOpen(false);
+    setSearchTerm("");
   };
+
+  // Atalhos de teclado
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+      
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+        setSearchTerm("");
+      }
+      
+      if (e.key === 'Enter' && searchTerm) {
+        // Selecionar primeiro resultado da busca
+        const currentList = activeTab === 'language' ? filteredLanguages : 
+                           activeTab === 'currency' ? filteredCurrencies : 
+                           filteredRegions;
+        
+        if (currentList.length > 0) {
+          const firstItem = currentList[0];
+          if (activeTab === 'language') handleLanguageChange(firstItem);
+          else if (activeTab === 'currency') handleCurrencyChange(firstItem);
+          else handleRegionChange(firstItem);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, searchTerm, activeTab, filteredLanguages, filteredCurrencies, filteredRegions]);
 
   return (
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 text-sm text-gray-600 hover:text-brand-700 transition-colors border border-gray-200 rounded-lg px-3 py-2"
+        disabled={isLoading}
+        className="flex items-center gap-2 text-sm text-gray-600 hover:text-brand-700 transition-all duration-200 border border-gray-200 rounded-lg px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        aria-label="Selecionar idioma, moeda e país"
       >
-        <span className="text-lg">{selectedLanguage.flag}</span>
+        {isLoading ? (
+          <div className="w-4 h-4 border-2 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
+        ) : (
+          <span className="text-lg">{selectedLanguage.flag}</span>
+        )}
         <span className="hidden sm:inline">{selectedLanguage.name}</span>
         <span className="text-gray-400">-</span>
         <span className="text-lg">{selectedCurrency.symbol}</span>
         <span className="hidden sm:inline">{selectedCurrency.code}</span>
         <svg
-          className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -503,7 +637,7 @@ export function ProfessionalSelector() {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
+        <div className="absolute top-full right-0 mt-2 w-80 sm:w-96 bg-white border border-gray-200 rounded-lg shadow-xl z-50 animate-in slide-in-from-top-2 duration-200">
           <div className="p-4 border-b border-gray-200">
             <h3 className="font-semibold text-gray-900">Change language</h3>
             <p className="text-sm text-gray-600">
@@ -590,6 +724,59 @@ export function ProfessionalSelector() {
             </p>
           </div>
 
+          {/* Campo de busca */}
+          <div className="p-4 border-b border-gray-200">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-3 py-2 pl-10 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                autoFocus
+              />
+              <svg
+                className="absolute left-3 top-2.5 w-4 h-4 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Seleções recentes */}
+          {recentSelections.length > 0 && !searchTerm && (
+            <div className="p-4 border-b border-gray-200">
+              <h4 className="text-sm font-medium text-gray-700 mb-2">Recent</h4>
+              <div className="space-y-1">
+                {recentSelections.slice(0, 3).map((selection, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      if (selection.type === 'language') handleLanguageChange(selection.item);
+                      else if (selection.type === 'currency') handleCurrencyChange(selection.item);
+                      else handleRegionChange(selection.item);
+                    }}
+                    className="flex items-center gap-2 w-full px-2 py-1 text-sm text-gray-600 hover:bg-gray-50 rounded transition-colors"
+                  >
+                    <span className="text-lg">
+                      {selection.type === 'language' ? selection.item.flag :
+                       selection.type === 'currency' ? selection.item.country :
+                       selection.item.flag}
+                    </span>
+                    <span>
+                      {selection.type === 'language' ? selection.item.name :
+                       selection.type === 'currency' ? `${selection.item.symbol} ${selection.item.code}` :
+                       selection.item.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="flex border-b border-gray-200">
             <button
               onClick={() => setActiveTab("language")}
@@ -626,89 +813,121 @@ export function ProfessionalSelector() {
           <div className="max-h-80 overflow-y-auto">
             {activeTab === "language" && (
               <div className="p-2">
-                {languages.map((language) => (
-                  <button
-                    key={language.code}
-                    onClick={() => handleLanguageChange(language)}
-                    className={`w-full flex items-center gap-3 px-3 py-2 text-sm hover:bg-gray-50 rounded-lg transition-colors ${
-                      selectedLanguage.code === language.code ? "bg-brand-50 text-brand-700" : "text-gray-700"
-                    }`}
-                  >
-                    <span className="text-lg">{language.flag}</span>
-                    <div className="flex-1 text-left">
-                      <div className="font-medium">{language.name}</div>
-                      <div className="text-xs text-gray-500">{language.region}</div>
-                    </div>
-                    {selectedLanguage.code === language.code && (
-                      <svg className="w-4 h-4 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    )}
-                  </button>
-                ))}
+                {filteredLanguages.length > 0 ? (
+                  filteredLanguages.map((language) => (
+                    <button
+                      key={language.code}
+                      onClick={() => handleLanguageChange(language)}
+                      className={`w-full flex items-center gap-3 px-3 py-2 text-sm hover:bg-gray-50 rounded-lg transition-all duration-150 ${
+                        selectedLanguage.code === language.code ? "bg-brand-50 text-brand-700" : "text-gray-700"
+                      }`}
+                    >
+                      <span className="text-lg">{language.flag}</span>
+                      <div className="flex-1 text-left">
+                        <div className="font-medium">{language.name}</div>
+                        <div className="text-xs text-gray-500">{language.region}</div>
+                      </div>
+                      {selectedLanguage.code === language.code && (
+                        <svg className="w-4 h-4 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </button>
+                  ))
+                ) : (
+                  <div className="p-4 text-center text-gray-500 text-sm">
+                    No languages found for "{searchTerm}"
+                  </div>
+                )}
               </div>
             )}
 
             {activeTab === "currency" && (
               <div className="p-2">
-                {currencies.map((currency) => (
-                  <button
-                    key={currency.code}
-                    onClick={() => handleCurrencyChange(currency)}
-                    className={`w-full flex items-center gap-3 px-3 py-2 text-sm hover:bg-gray-50 rounded-lg transition-colors ${
-                      selectedCurrency.code === currency.code ? "bg-brand-50 text-brand-700" : "text-gray-700"
-                    }`}
-                  >
-                    <span className="text-lg">{currency.country}</span>
-                    <div className="flex-1 text-left">
-                      <div className="font-medium">{currency.symbol} {currency.code}</div>
-                      <div className="text-xs text-gray-500">{currency.name}</div>
-                    </div>
-                    {selectedCurrency.code === currency.code && (
-                      <svg className="w-4 h-4 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    )}
-                  </button>
-                ))}
+                {filteredCurrencies.length > 0 ? (
+                  filteredCurrencies.map((currency) => (
+                    <button
+                      key={currency.code}
+                      onClick={() => handleCurrencyChange(currency)}
+                      className={`w-full flex items-center gap-3 px-3 py-2 text-sm hover:bg-gray-50 rounded-lg transition-all duration-150 ${
+                        selectedCurrency.code === currency.code ? "bg-brand-50 text-brand-700" : "text-gray-700"
+                      }`}
+                    >
+                      <span className="text-lg">{currency.country}</span>
+                      <div className="flex-1 text-left">
+                        <div className="font-medium">{currency.symbol} {currency.code}</div>
+                        <div className="text-xs text-gray-500">{currency.name}</div>
+                      </div>
+                      {selectedCurrency.code === currency.code && (
+                        <svg className="w-4 h-4 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </button>
+                  ))
+                ) : (
+                  <div className="p-4 text-center text-gray-500 text-sm">
+                    No currencies found for "{searchTerm}"
+                  </div>
+                )}
               </div>
             )}
 
             {activeTab === "region" && (
               <div className="p-2">
-                {regions.map((region) => (
-                  <button
-                    key={region.code}
-                    onClick={() => handleRegionChange(region)}
-                    className={`w-full flex items-center gap-3 px-3 py-2 text-sm hover:bg-gray-50 rounded-lg transition-colors ${
-                      selectedRegion.code === region.code ? "bg-brand-50 text-brand-700" : "text-gray-700"
-                    }`}
-                  >
-                    <span className="text-lg">{region.flag}</span>
-                    <div className="flex-1 text-left">
-                      <div className="font-medium">{region.name}</div>
-                      <div className="text-xs text-gray-500">{region.currency}</div>
-                    </div>
-                    {selectedRegion.code === region.code && (
-                      <svg className="w-4 h-4 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    )}
-                  </button>
-                ))}
+                {filteredRegions.length > 0 ? (
+                  filteredRegions.map((region) => (
+                    <button
+                      key={region.code}
+                      onClick={() => handleRegionChange(region)}
+                      className={`w-full flex items-center gap-3 px-3 py-2 text-sm hover:bg-gray-50 rounded-lg transition-all duration-150 ${
+                        selectedRegion.code === region.code ? "bg-brand-50 text-brand-700" : "text-gray-700"
+                      }`}
+                    >
+                      <span className="text-lg">{region.flag}</span>
+                      <div className="flex-1 text-left">
+                        <div className="font-medium">{region.name}</div>
+                        <div className="text-xs text-gray-500">{region.currency}</div>
+                      </div>
+                      {selectedRegion.code === region.code && (
+                        <svg className="w-4 h-4 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </button>
+                  ))
+                ) : (
+                  <div className="p-4 text-center text-gray-500 text-sm">
+                    No countries found for "{searchTerm}"
+                  </div>
+                )}
               </div>
             )}
           </div>
 
           <div className="p-4 border-t border-gray-200 bg-gray-50">
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                setIsOpen(false);
+                setSearchTerm("");
+              }}
               className="w-full bg-brand-600 text-white py-2 px-4 rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium"
             >
-              Change
+              Done
             </button>
           </div>
         </div>
+      )}
+
+      {/* Overlay para fechar ao clicar fora */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => {
+            setIsOpen(false);
+            setSearchTerm("");
+          }}
+        />
       )}
     </div>
   );
