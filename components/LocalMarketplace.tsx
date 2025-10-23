@@ -78,7 +78,9 @@ const marketplaceTranslations = {
 };
 
 const t = (key: string, lang: string = "pt-PT"): string => {
-  return marketplaceTranslations[lang as keyof typeof marketplaceTranslations]?.[key as keyof typeof marketplaceTranslations[typeof lang]] || key;
+  const langTranslations = marketplaceTranslations[lang as keyof typeof marketplaceTranslations];
+  if (!langTranslations) return key;
+  return (langTranslations as any)[key] || key;
 };
 
 // Dados mock do marketplace local
@@ -202,7 +204,7 @@ export function LocalMarketplace() {
   };
 
   const getCartByStore = () => {
-    const stores = {};
+    const stores: { [key: number]: { storeName: string; items: any[] } } = {};
     cart.forEach(item => {
       if (!stores[item.storeId]) {
         stores[item.storeId] = {

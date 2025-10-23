@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "use client";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -90,7 +90,9 @@ const translations = {
 };
 
 const t = (key: string, lang: string = "pt-PT"): string => {
-  return translations[lang as keyof typeof translations]?.[key as keyof typeof translations[typeof lang]] || key;
+  const langTranslations = translations[lang as keyof typeof translations];
+  if (!langTranslations) return key;
+  return (langTranslations as any)[key] || key;
 };
 
 // Cores predefinidas

@@ -68,7 +68,9 @@ const merchantTranslations = {
 };
 
 const t = (key: string, lang: string = "pt-PT"): string => {
-  return merchantTranslations[lang as keyof typeof merchantTranslations]?.[key as keyof typeof merchantTranslations[typeof lang]] || key;
+  const langTranslations = merchantTranslations[lang as keyof typeof merchantTranslations];
+  if (!langTranslations) return key;
+  return (langTranslations as any)[key] || key;
 };
 
 // Dados mock
