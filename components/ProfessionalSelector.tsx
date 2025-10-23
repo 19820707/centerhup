@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const languages = [
   { code: "pt-PT", name: "Português", flag: "🇵🇹", region: "Portugal" },
@@ -321,20 +321,75 @@ export function ProfessionalSelector() {
   const [activeTab, setActiveTab] = useState<"language" | "currency" | "region">("language");
   const [isOpen, setIsOpen] = useState(false);
 
+  // Carregar preferências salvas ao inicializar
+  useEffect(() => {
+    const savedRegion = localStorage.getItem('selectedRegion');
+    const savedCurrency = localStorage.getItem('selectedCurrency');
+    const savedLanguage = localStorage.getItem('selectedLanguage');
+
+    if (savedRegion) {
+      try {
+        const region = JSON.parse(savedRegion);
+        setSelectedRegion(region);
+      } catch (e) {
+        console.error('Erro ao carregar região salva:', e);
+      }
+    }
+
+    if (savedCurrency) {
+      try {
+        const currency = JSON.parse(savedCurrency);
+        setSelectedCurrency(currency);
+      } catch (e) {
+        console.error('Erro ao carregar moeda salva:', e);
+      }
+    }
+
+    if (savedLanguage) {
+      try {
+        const language = JSON.parse(savedLanguage);
+        setSelectedLanguage(language);
+        document.documentElement.lang = language.code;
+      } catch (e) {
+        console.error('Erro ao carregar idioma salvo:', e);
+      }
+    }
+  }, []);
+
   const handleLanguageChange = (language: typeof languages[0]) => {
     setSelectedLanguage(language);
     const matchingRegion = regions.find(r => r.code === language.code.split('-')[1]);
     if (matchingRegion) setSelectedRegion(matchingRegion);
+    
+    // Implementar mudança de idioma real
+    document.documentElement.lang = language.code;
+    localStorage.setItem('selectedLanguage', JSON.stringify(language));
+    
+    console.log("Idioma alterado para:", language.name, language.code);
+    
+    // Simular tradução (em um projeto real, você faria uma chamada API)
+    alert(`Idioma alterado para ${language.name} (${language.code})`);
   };
 
   const handleCurrencyChange = (currency: typeof currencies[0]) => {
     setSelectedCurrency(currency);
+    localStorage.setItem('selectedCurrency', JSON.stringify(currency));
+    
+    console.log("Moeda alterada para:", currency.name, currency.symbol);
+    alert(`Moeda alterada para ${currency.symbol} ${currency.code} - ${currency.name}`);
   };
 
   const handleRegionChange = (region: typeof regions[0]) => {
     setSelectedRegion(region);
     const matchingCurrency = currencies.find(c => c.code === region.currency);
     if (matchingCurrency) setSelectedCurrency(matchingCurrency);
+    
+    // Salvar preferências
+    localStorage.setItem('selectedRegion', JSON.stringify(region));
+    localStorage.setItem('selectedCurrency', JSON.stringify(matchingCurrency));
+    
+    console.log("País/Região alterado para:", region.name, region.code);
+    alert(`País/Região alterado para ${region.name} (${region.code})`);
   };
 
   return (
