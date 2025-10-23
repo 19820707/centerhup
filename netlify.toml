@@ -1,27 +1,117 @@
 [build]
-  command = "npm run build"
+  command = "npm run ci && npm run build"
   publish = "out"
   functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "20"
+  NPM_FLAGS = "--no-fund --prefer-offline"
 
 [context.production]
-  command = "npm run build"
+  command = "npm run ci && npm run build"
 
 [dev]
   command = "npm run dev"
   port = 3000
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Performance & Caching - HTTP/2 + Immutable
+[[headers]]
+for = "/*"
+[headers.values]
+# Segurança + H2
+Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+X-Content-Type-Options = "nosniff"
+X-Frame-Options = "SAMEORIGIN"
+Referrer-Policy = "strict-origin-when-cross-origin"
+Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+Cross-Origin-Opener-Policy = "same-origin"
+Cross-Origin-Resource-Policy = "same-site"
+
+# HTML: curto e com revalidação
+[[headers]]
+for = "/*.html"
+[headers.values]
+Cache-Control = "public, max-age=60, s-maxage=60, stale-while-revalidate=300"
+
+# Assets fingerprintados: cache longuíssimo e imutável
+[[headers]]
+for = "/_next/*"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
+for = "/assets/*"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+# Fontes e imagens: cache agressivo
+[[headers]]
+for = "/*.woff2"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+for = "/*.woff"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+for = "/*.png"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+for = "/*.jpg"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+for = "/*.jpeg"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+for = "/*.webp"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+for = "/*.avif"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+for = "/*.svg"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+# CSP moderna
+[[headers]]
+for = "/*"
+[headers.values]
+Content-Security-Policy = """
+default-src 'self';
+script-src 'self' 'unsafe-inline' 'unsafe-eval';
+style-src 'self' 'unsafe-inline';
+img-src 'self' data: https:;
+font-src 'self' data:;
+connect-src 'self' https:;
+frame-ancestors 'self';
+base-uri 'self';
+upgrade-insecure-requests;
+"""
+
+# Edge Functions
+[[edge_functions]]
+path = "/*"
+function = "i18n"
+
+[[edge_functions]]
+path = "/"
+function = "ab"
+
+# SPA fallback inteligente
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200

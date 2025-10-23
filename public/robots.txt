@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://centerhub.netlify.app/sitemap.xml
+
+# Crawl-delay para evitar sobrecarga
+Crawl-delay: 1
+
+# Bloquear arquivos desnecessários
+Disallow: /_next/
+Disallow: /api/
+Disallow: /netlify/
+Disallow: /*.json$
+Disallow: /*.xml$
+
+# Permitir assets importantes
+Allow: /_next/static/
+Allow: /favicon.ico
+Allow: /logo.svg
+Allow: /images/

@@ -9,6 +9,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "ci": "npm run lint && npm run typecheck",
+    "analyze": "ANALYZE=true next build",
     "vercel-build": "npm run build",
     "postbuild": "echo 'Build completed successfully'"
   },
