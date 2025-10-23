@@ -18,6 +18,11 @@ const nextConfig = {
   
   // Headers de segurança (removido para export estático)
   // Headers são configurados no netlify.toml
+
+  // ⚠️ Opcional: não quebre o build por erros de ESLint em produção
+  // eslint: {
+  //   ignoreDuringBuilds: true,
+  // },
 };
 
 module.exports = nextConfig;
