@@ -72,7 +72,8 @@ const translations = {
 
 // Função para traduzir texto
 const t = (key: string, lang: string = "pt-PT"): string => {
-  return translations[lang as keyof typeof translations]?.[key as keyof typeof translations[typeof lang]] || key;
+  const langTranslations = translations[lang as keyof typeof translations];
+  return (langTranslations as any)?.[key] || key;
 };
 
 const languages = [
