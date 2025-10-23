@@ -1,19 +1,5 @@
-import { Navbar } from "@/components/Navbar";
-import { Hero } from "@/components/Hero";
-import { Features } from "@/components/Features";
-import { CTA } from "@/components/CTA";
-import { Footer } from "@/components/Footer";
-import { LocalMarketplace } from "@/components/LocalMarketplace";
+import { redirect } from 'next/navigation';
 
-export default function Page() {
-  return (
-    <main id="main-content">
-      <Navbar />
-      <Hero />
-      <LocalMarketplace />
-      <Features />
-      <CTA />
-      <Footer />
-    </main>
-  );
+export default function RootPage() {
+  redirect('/pt-PT');
 }

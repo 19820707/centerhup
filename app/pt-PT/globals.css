@@ -1,0 +1,129 @@
+/* --- Tailwind directives --- */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- BASE: tokens e resets leves --- */
+@layer base {
+  :root {
+    /* paleta clara (RGB) */
+    --bg: 255 255 255;               /* rgb */
+    --fg: 17 24 39;                  /* gray-900 */
+    --muted: 107 114 128;            /* gray-500 */
+    --card: 255 255 255;
+    --border: 229 231 235;           /* gray-200 */
+
+    /* tokens semânticos */
+    --brand-100: 238 242 255;
+    --brand-600: 79 70 229;
+    --brand-700: 67 56 202;
+
+    /* raio e sombras consistentes */
+    --radius: 0.75rem;               /* ~ rounded-xl */
+    --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 1px 3px 0 rgb(0 0 0 / 0.08);
+
+    color-scheme: light;
+  }
+
+  /* dark mode via classe .dark (tailwind.config: darkMode: "class") */
+  .dark {
+    --bg: 17 24 39;                  /* gray-900 */
+    --fg: 243 244 246;               /* gray-100 */
+    --muted: 156 163 175;            /* gray-400 */
+    --card: 31 41 55;                /* gray-800 */
+    --border: 55 65 81;              /* gray-700 */
+
+    --brand-100: 30 58 138;          /* mais escuro para contraste */
+    --brand-600: 99 102 241;
+    --brand-700: 79 70 229;
+
+    color-scheme: dark;
+  }
+
+  html, body { height: 100%; }
+  body {
+    color: rgb(var(--fg));
+    background: rgb(var(--bg));
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* base de foco acessível */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-offset-2 ring-brand-600 ring-offset-white dark:ring-offset-gray-900;
+  }
+}
+
+/* --- COMPONENTS: padrões reutilizáveis --- */
+@layer components {
+  /* container máximo consistente */
+  .container-max {
+    @apply max-w-6xl mx-auto px-4;
+  }
+
+  /* cartão */
+  .card {
+    @apply rounded-2xl border p-6 shadow-sm bg-white border-gray-200 dark:bg-[rgb(var(--card))] dark:border-gray-700;
+    box-shadow: var(--shadow);
+  }
+
+  /* badge */
+  .badge {
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm;
+    background-color: rgb(var(--brand-100));
+    color: rgb(var(--brand-700));
+  }
+
+  /* BOTÕES: base + variantes + tamanhos + estados */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl font-medium transition
+           focus-visible:outline-none disabled:opacity-50 disabled:pointer-events-none
+           data-[state=loading]:cursor-wait select-none;
+    min-height: 2.75rem; /* 44px hit area */
+    gap: .5rem;
+  }
+
+  /* tamanhos */
+  .btn-sm  { @apply px-3 py-2 text-sm rounded-lg; }
+  .btn-md  { @apply px-4 py-2.5 text-sm; }
+  .btn-lg  { @apply px-5 py-3 text-base; }
+
+  /* variantes */
+  .btn-primary {
+    @apply btn text-white;
+    background-color: rgb(var(--brand-600));
+  }
+  .btn-primary:hover { background-color: rgb(var(--brand-700)); }
+
+  .btn-ghost {
+    @apply btn border border-gray-200 text-gray-900 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-800;
+    background-color: transparent;
+  }
+
+  .btn-outline {
+    @apply btn border text-gray-900 hover:bg-gray-50 dark:text-gray-100 dark:hover:bg-gray-800;
+    border-color: rgb(var(--border));
+  }
+
+  .btn-danger {
+    @apply btn text-white bg-red-600 hover:bg-red-700;
+  }
+
+  /* ícones dentro do botão */
+  .btn > .icon {
+    @apply size-5;
+  }
+
+  /* estado loading: usar data-state="loading" */
+  .btn[data-state="loading"] .label { @apply opacity-0; }
+  .btn[data-state="loading"] .spinner { @apply absolute; }
+
+  /* utilitários de texto/cores semânticas (opcional) */
+  .text-muted { color: rgb(var(--muted)); }
+}
+
+/* --- UTILITIES: pequenos helpers opcionais --- */
+@layer utilities {
+  .shadow-soft { box-shadow: var(--shadow); }
+  .rounded-xl-var { border-radius: var(--radius); }
+}

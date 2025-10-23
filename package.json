@@ -15,22 +15,28 @@
     "optimize": "node scripts/performance-optimizer.js",
     "reliability": "node scripts/reliability-monitor.js",
     "monitor": "npm run kpis && npm run vitals && npm run optimize && npm run reliability",
-    "check-bundle": "node scripts/check-bundle.js"
+    "check-bundle": "node scripts/check-bundle.js",
+    "lh:ci": "lhci autorun",
+    "lh:collect": "lhci collect --staticDistDir=./out",
+    "lh:assert": "lhci assert"
   },
   "dependencies": {
     "autoprefixer": "^10.4.21",
     "next": "14.2.5",
+    "posthog-js": "^1.280.1",
     "react": "^18",
     "react-dom": "^18",
     "web-vitals": "^3.5.2"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.15.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "^14.2.33",
     "eslint-plugin-react-refresh": "^0.4.24",
+    "next-pwa": "^5.6.0",
     "next-sitemap": "^4.2.3",
     "postcss": "^8",
     "stylelint": "^16.0.0",

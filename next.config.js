@@ -13,6 +13,9 @@ const nextConfig = {
     optimizePackageImports: ['lucide-react', 'react-icons']
   },
   
+  // i18n removido - não compatível com output: 'export'
+  // Implementação manual via middleware e rotas
+  
   // Compressão
   compress: true,
   
