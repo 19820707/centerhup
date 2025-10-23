@@ -7,7 +7,7 @@ import { LocalMarketplace } from "@/components/LocalMarketplace";
 
 export default function Page() {
   return (
-    <main>
+    <main id="main-content">
       <Navbar />
       <Hero />
       <LocalMarketplace />

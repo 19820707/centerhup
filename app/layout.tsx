@@ -3,21 +3,55 @@ import "./globals.css";
 import { initWebVitals } from "./reportWebVitals";
 
 export const metadata: Metadata = {
-  title: "CenterHub — Marketplace local para apoiar o comércio do seu bairro",
-  description: "Lojas locais, produtos frescos e serviços do bairro reunidos num só app. Apoie comerciantes locais e fortaleça a economia da sua comunidade.",
-  metadataBase: new URL("https://centerhup.com"),
+  title: "CenterHub — Mercado local perto de si",
+  description: "Lojas, produtos frescos e serviços do bairro num só app. Compre perto e fortaleça a economia local.",
+  metadataBase: new URL("https://centerhub.netlify.app"),
+  keywords: ["marketplace local", "comércio local", "lojas bairro", "produtos frescos", "economia local", "Portugal"],
+  authors: [{ name: "CenterHub" }],
+  creator: "CenterHub",
+  publisher: "CenterHub",
   openGraph: {
-    title: "CenterHub - Marketplace Local",
-    description: "Perto de si. Compre perto. Fortaleça a sua comunidade.",
-    url: "https://centerhup.com",
+    type: "website",
+    url: "https://centerhub.netlify.app",
+    title: "CenterHub — Mercado local perto de si",
+    description: "Lojas, produtos frescos e serviços do bairro num só app. Compre perto e fortaleça a economia local.",
     siteName: "CenterHub",
     images: [
-      { url: "/og.png", width: 1200, height: 630, alt: "CenterHub" }
+      { 
+        url: "/og-cover.jpg", 
+        width: 1200, 
+        height: 630, 
+        alt: "CenterHub - Marketplace Local" 
+      }
     ],
     locale: "pt_PT",
-    type: "website"
+    countryName: "Portugal"
   },
-  twitter: { card: "summary_large_image", site: "@centerhub" }
+  twitter: {
+    card: "summary_large_image",
+    site: "@centerhub",
+    creator: "@centerhub",
+    title: "CenterHub — Mercado local perto de si",
+    description: "Lojas, produtos frescos e serviços do bairro num só app.",
+    images: ["/og-cover.jpg"]
+  },
+  alternates: {
+    canonical: "https://centerhub.netlify.app"
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: "google-site-verification-code", // TODO: Adicionar código real
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -27,6 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     "name": "CenterHub",
     "description": "Marketplace local para apoiar o comércio do seu bairro",
     "url": "https://centerhub.netlify.app",
+    "inLanguage": "pt-PT",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://centerhub.netlify.app/search?q={search_term_string}",
@@ -35,7 +70,36 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     "publisher": {
       "@type": "Organization",
       "name": "CenterHub",
-      "url": "https://centerhub.netlify.app"
+      "url": "https://centerhub.netlify.app",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://centerhub.netlify.app/logo.png"
+      },
+      "sameAs": [
+        "https://twitter.com/centerhub",
+        "https://facebook.com/centerhub"
+      ]
+    },
+    "mainEntity": {
+      "@type": "LocalBusiness",
+      "name": "CenterHub",
+      "description": "Marketplace local que conecta clientes com comerciantes do bairro",
+      "url": "https://centerhub.netlify.app",
+      "telephone": "+351-XXX-XXX-XXX",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "PT",
+        "addressLocality": "Portugal"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "39.5",
+        "longitude": "-8.0"
+      },
+      "openingHours": "Mo-Su 00:00-23:59",
+      "priceRange": "€€",
+      "paymentAccepted": ["Cash", "Credit Card", "MB Way"],
+      "currenciesAccepted": "EUR"
     }
   };
 
@@ -59,8 +123,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `
           }}
         />
+        <link rel="preload" href="/fonts/Inter-Variable.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
       </head>
-      <body>{children}</body>
+      <body>
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50">
+          Saltar para o conteúdo principal
+        </a>
+        {children}
+      </body>
     </html>
   );
 }

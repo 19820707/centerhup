@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ProfessionalSelector } from "./ProfessionalSelector";
 
 export function Navbar() {
@@ -5,7 +6,14 @@ export function Navbar() {
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-gray-200">
       <div className="container-max h-16 flex items-center justify-between">
         <a href="#" className="flex items-center gap-2 font-semibold">
-          <img src="/logo.svg" alt="CenterHub" className="h-6 w-6" />
+          <Image 
+            src="/logo.svg" 
+            alt="CenterHub" 
+            width={24} 
+            height={24} 
+            className="h-6 w-6"
+            priority
+          />
           CenterHub
         </a>
         <nav className="hidden sm:flex items-center gap-6 text-sm">
