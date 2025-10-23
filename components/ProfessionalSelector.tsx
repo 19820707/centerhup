@@ -1,6 +1,80 @@
 "use client";
 import { useState, useEffect } from "react";
 
+// Sistema de tradução
+const translations = {
+  "pt-PT": {
+    "Change language": "Alterar idioma",
+    "You are shopping on": "Está a comprar em",
+    "Search...": "Pesquisar...",
+    "Recent": "Recentes",
+    "Language": "Idioma",
+    "Currency": "Moeda",
+    "Country/Region": "País/Região",
+    "Done": "Concluído",
+    "No languages found for": "Nenhum idioma encontrado para",
+    "No currencies found for": "Nenhuma moeda encontrada para",
+    "No countries found for": "Nenhum país encontrado para"
+  },
+  "en-US": {
+    "Change language": "Change language",
+    "You are shopping on": "You are shopping on",
+    "Search...": "Search...",
+    "Recent": "Recent",
+    "Language": "Language",
+    "Currency": "Currency",
+    "Country/Region": "Country/Region",
+    "Done": "Done",
+    "No languages found for": "No languages found for",
+    "No currencies found for": "No currencies found for",
+    "No countries found for": "No countries found for"
+  },
+  "es-ES": {
+    "Change language": "Cambiar idioma",
+    "You are shopping on": "Estás comprando en",
+    "Search...": "Buscar...",
+    "Recent": "Recientes",
+    "Language": "Idioma",
+    "Currency": "Moneda",
+    "Country/Region": "País/Región",
+    "Done": "Hecho",
+    "No languages found for": "No se encontraron idiomas para",
+    "No currencies found for": "No se encontraron monedas para",
+    "No countries found for": "No se encontraron países para"
+  },
+  "fr-FR": {
+    "Change language": "Changer de langue",
+    "You are shopping on": "Vous achetez sur",
+    "Search...": "Rechercher...",
+    "Recent": "Récent",
+    "Language": "Langue",
+    "Currency": "Devise",
+    "Country/Region": "Pays/Région",
+    "Done": "Terminé",
+    "No languages found for": "Aucune langue trouvée pour",
+    "No currencies found for": "Aucune devise trouvée pour",
+    "No countries found for": "Aucun pays trouvé pour"
+  },
+  "de-DE": {
+    "Change language": "Sprache ändern",
+    "You are shopping on": "Sie kaufen auf",
+    "Search...": "Suchen...",
+    "Recent": "Kürzlich",
+    "Language": "Sprache",
+    "Currency": "Währung",
+    "Country/Region": "Land/Region",
+    "Done": "Fertig",
+    "No languages found for": "Keine Sprachen gefunden für",
+    "No currencies found for": "Keine Währungen gefunden für",
+    "No countries found for": "Keine Länder gefunden für"
+  }
+};
+
+// Função para traduzir texto
+const t = (key: string, lang: string = "pt-PT"): string => {
+  return translations[lang as keyof typeof translations]?.[key as keyof typeof translations[typeof lang]] || key;
+};
+
 const languages = [
   { code: "pt-PT", name: "Português", flag: "🇵🇹", region: "Portugal" },
   { code: "pt-BR", name: "Português", flag: "🇧🇷", region: "Brasil" },
@@ -592,15 +666,12 @@ export function ProfessionalSelector() {
       
       if (e.key === 'Enter' && searchTerm) {
         // Selecionar primeiro resultado da busca
-        const currentList = activeTab === 'language' ? filteredLanguages : 
-                           activeTab === 'currency' ? filteredCurrencies : 
-                           filteredRegions;
-        
-        if (currentList.length > 0) {
-          const firstItem = currentList[0];
-          if (activeTab === 'language') handleLanguageChange(firstItem);
-          else if (activeTab === 'currency') handleCurrencyChange(firstItem);
-          else handleRegionChange(firstItem);
+        if (activeTab === 'language' && filteredLanguages.length > 0) {
+          handleLanguageChange(filteredLanguages[0]);
+        } else if (activeTab === 'currency' && filteredCurrencies.length > 0) {
+          handleCurrencyChange(filteredCurrencies[0]);
+        } else if (activeTab === 'region' && filteredRegions.length > 0) {
+          handleRegionChange(filteredRegions[0]);
         }
       }
     };
@@ -639,9 +710,9 @@ export function ProfessionalSelector() {
       {isOpen && (
         <div className="absolute top-full right-0 mt-2 w-80 sm:w-96 bg-white border border-gray-200 rounded-lg shadow-xl z-50 animate-in slide-in-from-top-2 duration-200">
           <div className="p-4 border-b border-gray-200">
-            <h3 className="font-semibold text-gray-900">Change language</h3>
+            <h3 className="font-semibold text-gray-900">{t("Change language", selectedLanguage.code)}</h3>
             <p className="text-sm text-gray-600">
-              You are shopping on {(() => {
+              {t("You are shopping on", selectedLanguage.code)} {(() => {
                 const domainMap: { [key: string]: string } = {
                   'PT': 'CenterHub.pt',
                   'BR': 'CenterHub.com.br', 
@@ -729,7 +800,7 @@ export function ProfessionalSelector() {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder={t("Search...", selectedLanguage.code)}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-3 py-2 pl-10 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
@@ -749,7 +820,7 @@ export function ProfessionalSelector() {
           {/* Seleções recentes */}
           {recentSelections.length > 0 && !searchTerm && (
             <div className="p-4 border-b border-gray-200">
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Recent</h4>
+              <h4 className="text-sm font-medium text-gray-700 mb-2">{t("Recent", selectedLanguage.code)}</h4>
               <div className="space-y-1">
                 {recentSelections.slice(0, 3).map((selection, index) => (
                   <button
@@ -786,7 +857,7 @@ export function ProfessionalSelector() {
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              Language
+              {t("Language", selectedLanguage.code)}
             </button>
             <button
               onClick={() => setActiveTab("currency")}
@@ -796,7 +867,7 @@ export function ProfessionalSelector() {
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              Currency
+              {t("Currency", selectedLanguage.code)}
             </button>
             <button
               onClick={() => setActiveTab("region")}
@@ -806,7 +877,7 @@ export function ProfessionalSelector() {
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              Country/Region
+              {t("Country/Region", selectedLanguage.code)}
             </button>
           </div>
 
@@ -836,7 +907,7 @@ export function ProfessionalSelector() {
                   ))
                 ) : (
                   <div className="p-4 text-center text-gray-500 text-sm">
-                    No languages found for "{searchTerm}"
+                    {t("No languages found for", selectedLanguage.code)} "{searchTerm}"
                   </div>
                 )}
               </div>
@@ -867,7 +938,7 @@ export function ProfessionalSelector() {
                   ))
                 ) : (
                   <div className="p-4 text-center text-gray-500 text-sm">
-                    No currencies found for "{searchTerm}"
+                    {t("No currencies found for", selectedLanguage.code)} "{searchTerm}"
                   </div>
                 )}
               </div>
@@ -898,7 +969,7 @@ export function ProfessionalSelector() {
                   ))
                 ) : (
                   <div className="p-4 text-center text-gray-500 text-sm">
-                    No countries found for "{searchTerm}"
+                    {t("No countries found for", selectedLanguage.code)} "{searchTerm}"
                   </div>
                 )}
               </div>
@@ -913,7 +984,7 @@ export function ProfessionalSelector() {
               }}
               className="w-full bg-brand-600 text-white py-2 px-4 rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium"
             >
-              Done
+              {t("Done", selectedLanguage.code)}
             </button>
           </div>
         </div>
