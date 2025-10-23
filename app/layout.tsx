@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { initWebVitals } from "./reportWebVitals";
 
 export const metadata: Metadata = {
   title: "CenterHub — Marketplace local para apoiar o comércio do seu bairro",
@@ -44,6 +45,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined') {
+                import('./reportWebVitals').then(module => {
+                  module.initWebVitals();
+                });
+              }
+            `
+          }}
         />
       </head>
       <body>{children}</body>
