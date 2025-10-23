@@ -52,6 +52,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               if (typeof window !== 'undefined') {
                 import('./reportWebVitals').then(module => {
                   module.initWebVitals();
+                }).catch(() => {
+                  // Fallback se web-vitals não estiver disponível
                 });
               }
             `

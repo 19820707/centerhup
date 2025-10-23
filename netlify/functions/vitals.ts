@@ -3,7 +3,7 @@
  * Recebe métricas de performance do cliente
  */
 
-import type { Handler } from '@netlify/functions';
+// import type { Handler } from '@netlify/functions';
 
 interface VitalMetric {
   name: string;
@@ -17,7 +17,7 @@ interface VitalMetric {
   connection: string;
 }
 
-export const handler: Handler = async (event) => {
+export const handler = async (event: any) => {
   // CORS headers
   const headers = {
     'Access-Control-Allow-Origin': '*',

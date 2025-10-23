@@ -10,35 +10,14 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384]
   },
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: ['lucide-react', 'react-icons']
   },
   
   // Compressão
   compress: true,
   
-  // Headers de segurança
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN'
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin'
-          }
-        ]
-      }
-    ];
-  }
+  // Headers de segurança (removido para export estático)
+  // Headers são configurados no netlify.toml
 };
 
 module.exports = nextConfig;
